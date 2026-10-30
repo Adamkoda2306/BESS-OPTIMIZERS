@@ -1,0 +1,95 @@
+{
+  "column_mapping": {
+    "timestamp": "Time",
+    "thermal_mw": "SCADA/ANALOG/044MQ068/0",
+    "hydro_mw": "SCADA/ANALOG/044MQ062/0",
+    "gas_mw": "SCADA/ANALOG/044MQ063/0",
+    "nuclear_mw": "SCADA/ANALOG/044MQ064/0",
+    "wind_mw": "SCADA/ANALOG/044MQ070/0",
+    "pv_mw": "SCADA/ANALOG/044MQ206/0",
+    "consumption_mw": "SCADA/ANALOG/044MQ067/0"
+  },
+  "descriptive_header_skipped": true,
+  "raw_rows": 8640,
+  "hourly_rows": 720,
+  "sampling_interval_seconds": 300.0,
+  "expected_samples_per_hour": 12,
+  "start": "2022-09-01 00:00:00+05:30",
+  "last_hour_start": "2022-09-30 23:00:00+05:30",
+  "input_timezone_for_unzoned_timestamps": "Asia/Kolkata",
+  "input_power_unit": "MW",
+  "minimum_required_coverage": 0.85,
+  "coverage_threshold_enforced": false,
+  "dropped_partial_boundary_hours": [],
+  "simultaneous_zero_dropout_samples_excluded": 0,
+  "negative_solar_samples_clipped": 0,
+  "demand_samples_flagged_for_review_not_removed": 0,
+  "demand_review_enabled": true,
+  "minimum_valid_hourly_coverage_fraction": 0.0,
+  "imputation": {
+    "enabled": true,
+    "method": "Uniform random sampling from each column and month's most frequent valid values",
+    "top_values": 20,
+    "seed": 42,
+    "candidate_values_mw": {
+      "2022-09": {
+        "pv_mw": [
+          0.3072209358,
+          0.8418645859,
+          1.145198822,
+          1.498956203,
+          2.775096416,
+          3.519408226,
+          3.587871552,
+          3.597665787,
+          3.672145844,
+          3.774150848,
+          3.822024345,
+          3.890522003,
+          3.971743107,
+          3.989726067,
+          4.01760006,
+          4.04702282,
+          4.139436722,
+          4.240114689,
+          4.447615623,
+          4.474078178
+        ]
+      }
+    },
+    "frequency_tie_break": "Ascending numeric value",
+    "fewer_than_requested_candidates": "Use all available distinct valid values",
+    "estimated_hours": 44,
+    "estimated_samples": 302,
+    "estimated_samples_by_column": {
+      "thermal_mw": 0,
+      "hydro_mw": 0,
+      "gas_mw": 0,
+      "nuclear_mw": 0,
+      "wind_mw": 0,
+      "pv_mw": 302,
+      "consumption_mw": 0
+    }
+  },
+  "price_requests": [
+    {
+      "url": "https://www.iexindia.com/market-data/day-ahead-market/market-snapshot?interval=ONE_HOUR&dp=SELECT_RANGE&fromDate=01-09-2022&toDate=30-09-2022&showGraph=false",
+      "retrieved_at_utc": "2026-10-30T09:00:37.573332+00:00",
+      "start": "2022-09-01",
+      "end": "2022-09-30",
+      "hours": 720
+    }
+  ],
+  "price_publisher": "Indian Energy Exchange Limited",
+  "price_market": "Conventional day-ahead market, unconstrained hourly MCP",
+  "raw_file": "/Users/adamk/Work/Datascience-Intern/present/datasets/original/September 2022 - Sheet1.csv",
+  "raw_sha256": "1ee84f276302cc7e13a86e2baf9a0d4bb1c6eb2227ebe3b3b875388daab9063d",
+  "price_kind": "IEX_DAM_observed_hourly_MCP",
+  "synthetic_prices_used": false,
+  "currency": "INR",
+  "timezone": "Asia/Kolkata",
+  "hourly_price_mean_inr_kwh": 5.6312510694444455,
+  "hourly_price_min_inr_kwh": 1.20092,
+  "hourly_price_max_inr_kwh": 12.0,
+  "aggregation": "Arithmetic mean after random imputation of invalid regular interval power samples in each IST hour"
+}

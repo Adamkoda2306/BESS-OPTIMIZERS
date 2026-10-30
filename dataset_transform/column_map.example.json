@@ -1,0 +1,7 @@
+{
+  "timestamp": "Time",
+  "wind_mw": "SCADA/ANALOG/044MQ070/0",
+  "pv_mw": "SCADA/ANALOG/044MQ206/0",
+  "gas_mw": "SCADA/ANALOG/044MQ063/0",
+  "consumption_mw": "SCADA/ANALOG/044MQ067/0"
+}

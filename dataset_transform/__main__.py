@@ -1,0 +1,6 @@
+"""Run dataset preparation with python -m dataset_transform."""
+
+from .generate_dataset import main
+
+if __name__ == '__main__':
+    main()
