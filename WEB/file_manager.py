@@ -23,8 +23,10 @@ class TempFileManager:
     """Manages temporary session directories with automatic 30-minute purging."""
 
     def __init__(self, base_dir=None, expiration_seconds=SESSION_EXPIRATION_SECONDS):
+        # Vercel has a read-only application directory; local runs keep WEB/tmp.
+        base_dir = base_dir or os.environ.get('BESS_TMP_DIR')
         if base_dir:
-            self.base_dir = Path(base_dir)
+            self.base_dir = Path(base_dir).resolve()
         else:
             self.base_dir = Path(__file__).resolve().parent / 'tmp'
         self.expiration_seconds = expiration_seconds

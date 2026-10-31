@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "functions": {
+    "api/dashboard.py": {
+      "maxDuration": 300,
+      "excludeFiles": "{env/**,.venv/**,output/**,datasets/original/**,Documentation/**,WEB/tmp/**,**/__pycache__/**,**/.DS_Store}"
+    }
+  },
+  "env": {
+    "BESS_TMP_DIR": "/tmp/bess_web_dashboard",
+    "MPLCONFIGDIR": "/tmp/bess_matplotlib"
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/dashboard"
+    }
+  ]
+}

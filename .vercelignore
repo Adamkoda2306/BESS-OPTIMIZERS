@@ -1,0 +1,10 @@
+.git/
+env/
+.venv/
+output/
+datasets/original/
+Documentation/
+WEB/tmp/
+**/__pycache__/
+**/.DS_Store
+.pytest_cache/
