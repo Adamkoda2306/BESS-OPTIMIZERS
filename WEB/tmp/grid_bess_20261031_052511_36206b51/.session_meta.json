@@ -1,8 +1,0 @@
-{
-  "session_id": "grid_bess_20261031_052511_36206b51",
-  "created_at": 1793424311.395502,
-  "created_at_iso": "2026-10-31T05:25:11.395507+00:00",
-  "expires_at": 1793424911.395502,
-  "ttl_seconds": 600,
-  "module": "grid_bess"
-}
