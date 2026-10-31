@@ -250,6 +250,7 @@ async function runGridBESSOptimization() {
       return;
     }
 
+    releaseFigureUrls(Dashboard.gridBessData);
     Dashboard.gridBessData = json;
     if (Dashboard.currentScreen === 'grid_bess') setActiveView('static_plots');
     showToast('Grid BESS optimization completed successfully!');
@@ -297,6 +298,7 @@ async function runSolarnexSimulation() {
       return;
     }
 
+    releaseFigureUrls(Dashboard.solarnexData);
     Dashboard.solarnexData = json;
     if (Dashboard.currentScreen === 'solarnex') setActiveView('static_plots');
     showToast('Solarnex rolling simulation completed successfully!');
@@ -328,6 +330,35 @@ function renderCurrentWorkspace() {
   else renderSolarnexResults(data);
 }
 
+// Each result owns browser-local image URLs, independent of server scratch files.
+const figureUrlCache = new WeakMap();
+
+function releaseFigureUrls(data) {
+  const urls = data && figureUrlCache.get(data);
+  if (!urls) return;
+  urls.forEach(url => URL.revokeObjectURL(url));
+  figureUrlCache.delete(data);
+}
+
+function getFigureUrl(data, filename) {
+  const encoded = data.chart_images?.[filename];
+  if (!encoded) {
+    // Compatibility with older responses and optional GIF artifacts.
+    return `/api/files/view?${new URLSearchParams({session_id: data.session_id, file: filename})}`;
+  }
+  let urls = figureUrlCache.get(data);
+  if (!urls) {
+    urls = new Map();
+    figureUrlCache.set(data, urls);
+  }
+  if (!urls.has(filename)) {
+    const binary = atob(encoded);
+    const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+    urls.set(filename, URL.createObjectURL(new Blob([bytes], {type: 'image/png'})));
+  }
+  return urls.get(filename);
+}
+
 // Both engines use the same figure view so tab changes restore every image.
 function renderStaticFigures(data, container, dispatchTitle, priceTitle) {
   const viewer = document.createElement('div');
@@ -341,7 +372,7 @@ function renderStaticFigures(data, container, dispatchTitle, priceTitle) {
   }
 
   figures.forEach(({filename, title}) => {
-    const url = `/api/files/view?${new URLSearchParams({session_id: data.session_id, file: filename})}`;
+    const url = getFigureUrl(data, filename);
     const figure = document.createElement('figure');
     figure.className = 'dispatch-figure';
     const caption = document.createElement('figcaption');

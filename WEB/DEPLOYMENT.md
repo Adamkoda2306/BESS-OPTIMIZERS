@@ -20,16 +20,23 @@ Local runs still use `WEB/tmp/`. Vercel sets `BESS_TMP_DIR` to
 `/tmp/bess_web_dashboard` because the deployed application directory is read-only.
 Matplotlib's cache also uses `/tmp`.
 
-**This configuration does not provide shared artifact storage.** Vercel's scratch
-space and the session registry are instance-local and ephemeral. The subsequent
-PNG/GIF/download requests may reach a different instance, or an instance may be
-recycled, so generated charts and downloads are not guaranteed to remain
-available, even before the session expires.
+Both PNG charts are included as base64 in the successful optimization response
+(`chart_images`). The frontend turns them into browser-local Blob URLs, reusing
+those URLs when changing tabs. Displaying or opening the PNGs at full resolution
+therefore does not depend on subsequent requests finding the same Vercel instance.
+The PNGs remain visible in the current page after the temporary session is purged.
+A new successful run revokes that engine's previous Blob URLs to release memory.
 
-For reliable production results, add shared object storage for artifacts and
-shared session metadata, or host the existing Python server on a persistent
-backend and proxy its API from Vercel. A `vercel.json` alone cannot provide this
-persistence. Neither storage provisioning nor a live deployment is included here.
+The original PNG files, CSV/JSON downloads and optional GIF still use temporary
+session directories. This configuration does not provide shared artifact storage;
+separate download/GIF requests can fail if they reach another instance or the
+session has expired. Persistent downloads/GIFs require shared object storage and
+session metadata, or a persistent Python backend. Refreshing the page clears the
+browser's in-memory results and requires another run.
+
+Vercel responses over 4 MB are rejected with an actionable error before exceeding
+the platform's 4.5 MB buffered response limit. Select a shorter simulation range
+if this occurs. Neither storage provisioning nor a live deployment is included.
 
 ## Verification after deployment
 
@@ -37,7 +44,7 @@ persistence. Neither storage provisioning nor a live deployment is included here
 2. Check `/api/health`, `/api/datasets`, and dataset date selection.
 3. Run Grid BESS for one day and Solarnex in Single Day mode; verify both PNGs
    and the hourly table. Repeat using multiple browser sessions to exercise
-   separate function instances once shared storage is configured.
+   separate function instances; PNG display should not make file-view requests.
 4. Check build/runtime logs for dependency installation, bundled CBC solver
    availability on Linux, bundle size, and simulation timeouts. Local macOS
    tests cannot validate Vercel's Linux build or instance lifecycle.

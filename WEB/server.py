@@ -1,9 +1,11 @@
 """HTTP server and REST API router for the BESS Web Dashboard."""
 
+import base64
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 import logging
 import mimetypes
+import os
 from pathlib import Path
 import urllib.parse
 
@@ -40,6 +42,14 @@ TEMPLATES_DIR = WEB_DIR / 'templates'
 STATIC_DIR = WEB_DIR / 'static'
 
 
+def attach_chart_images(result, session_dir):
+    """Capture PNGs in the producing request before its scratch space disappears."""
+    result['chart_images'] = {
+        filename: base64.b64encode((Path(session_dir) / filename).read_bytes()).decode('ascii')
+        for filename in ('bess_dispatch_chart.png', 'market_prices_chart.png')
+    }
+
+
 class BESSDashboardHandler(SimpleHTTPRequestHandler):
     """Handles static web requests and REST API routing for BESS simulations."""
 
@@ -49,6 +59,13 @@ class BESSDashboardHandler(SimpleHTTPRequestHandler):
     def _send_json(self, data, status_code=200):
         """Helper to send a JSON response."""
         encoded = json.dumps(data, default=str).encode('utf-8')
+        # Leave headroom under Vercel's 4.5 MB buffered response limit.
+        if os.environ.get('VERCEL') == '1' and len(encoded) > 4_000_000:
+            self._send_error_json(
+                "The simulation result is too large to return on Vercel. "
+                "Select a shorter date range and run again.", 413,
+            )
+            return
         self.send_response(status_code)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Content-Length', str(len(encoded)))
@@ -157,7 +174,7 @@ class BESSDashboardHandler(SimpleHTTPRequestHandler):
 
             sdir = default_file_manager.get_session_dir(session_id)
             if not sdir or not sdir.is_dir():
-                self._send_error_json("Session not found or expired (>30 min)", 404)
+                self._send_error_json("Session not found or expired", 404)
                 return
 
             target_file = (sdir / filename).resolve()
@@ -231,6 +248,7 @@ class BESSDashboardHandler(SimpleHTTPRequestHandler):
                 result['session_id'] = session_id
                 result['ttl_seconds'] = default_file_manager.expiration_seconds
                 result['session_path'] = str(session_dir)
+                attach_chart_images(result, session_dir)
 
                 self._send_json(result)
             except Exception as exc:
@@ -286,6 +304,7 @@ class BESSDashboardHandler(SimpleHTTPRequestHandler):
                 result['session_id'] = session_id
                 result['ttl_seconds'] = default_file_manager.expiration_seconds
                 result['session_path'] = str(session_dir)
+                attach_chart_images(result, session_dir)
 
                 self._send_json(result)
             except Exception as exc:
