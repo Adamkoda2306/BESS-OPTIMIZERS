@@ -1,0 +1,24 @@
+{
+  "status": "Optimal",
+  "currency": "INR",
+  "timezone": "Asia/Kolkata",
+  "start": "2023-09-15 00:00:00+05:30",
+  "last_hour_start": "2023-09-15 23:00:00+05:30",
+  "hours": 24,
+  "selected_date_ist": "2023-09-15",
+  "capacity_mwh": 2.0,
+  "max_power_mw": 1.0,
+  "round_trip_efficiency": 0.92,
+  "initial_soc_mwh": 1.0,
+  "final_soc_mwh": 1.0,
+  "charged_mwh": 4.170288282,
+  "discharged_mwh": 3.83666521,
+  "charge_cost_inr": 22805.96984455127,
+  "discharge_revenue_inr": 37657.6653781525,
+  "gross_arbitrage_inr": 14851.695533601232,
+  "equivalent_full_discharge_cycles": 1.999999995490784,
+  "price_source": [
+    "IEX_DAM_observed_hourly_MCP"
+  ],
+  "model": "Grid BESS Single-Day Perfect Foresight Arbitrage MILP"
+}

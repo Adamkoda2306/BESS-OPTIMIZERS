@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>BESS | Grid & Solarnex Storage Intelligence</title>
+  <link rel="stylesheet" href="/static/css/styles.css?v=20261031-responsive1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238B9A6E'/%3E%3Cpath d='M18 5 9 18h7l-2 9 10-14h-8z' fill='%23242B1F'/%3E%3C/svg%3E">
+</head>
+<body>
+
+  <!-- Shared line icons; no external assets or icon dependency. -->
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-energy" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-13h-8z"/></symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24"><path d="M4 4v16h16M7 14l4-5 4 3 5-7"/></symbol>
+    <symbol id="icon-rolling" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5M5.1 7a8 8 0 0 1 13-1L20 9M4 15l1.9 3a8 8 0 0 0 13-1"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M4 7h5m4 0h7M4 17h9m4 0h3M9 4v6m4 4v6"/><circle cx="11" cy="7" r="2"/><circle cx="15" cy="17" r="2"/></symbol>
+    <symbol id="icon-battery" viewBox="0 0 24 24"><rect x="3" y="6" width="17" height="12" rx="2"/><path d="M22 10v4M7 10v4m4-4v4m4-4v4"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+  </svg>
+  <a class="skip-link" href="#main-content">Skip to workspace</a>
+
+  <!-- Top Navigation Header -->
+  <header class="header">
+    <div class="brand-section">
+      <div class="brand-icon" aria-hidden="true"><svg class="icon " aria-hidden="true"><use href="#icon-energy"></use></svg></div>
+      <div>
+        <div class="brand-title">BESS</div>
+        <div class="brand-subtitle">Energy storage intelligence</div>
+      </div>
+    </div>
+
+    <div class="header-tools">
+      <button id="configuration-toggle" class="configuration-toggle" type="button"
+              aria-controls="configuration-drawer" aria-expanded="false" aria-haspopup="dialog">
+        <svg class="icon" aria-hidden="true"><use href="#icon-settings"></use></svg>
+        <span>Configuration</span>
+      </button>
+    </div>
+
+    <!-- Dual Screen Navigation Switcher -->
+    <nav class="nav-switcher" aria-label="Optimization engine">
+      <button id="nav-grid-bess" class="nav-tab active">
+        <svg class="icon " aria-hidden="true"><use href="#icon-chart"></use></svg><span class="nav-copy"><span class="nav-name">Grid BESS Optimizer</span><span class="nav-description">Single-day arbitrage</span></span>
+      </button>
+      <button id="nav-solarnex" class="nav-tab">
+        <svg class="icon " aria-hidden="true"><use href="#icon-rolling"></use></svg><span class="nav-copy"><span class="nav-name">Solarnex BESS Engine</span><span class="nav-description">Rolling-horizon dispatch</span></span>
+      </button>
+    </nav>
+
+  </header>
+
+  <!-- Main Application Body -->
+  <main id="main-content" class="main-wrapper">
+    <div class="page-intro">
+      <div>
+        <p class="eyebrow">Analysis workspace</p>
+        <h1>Storage analysis</h1>
+        <p class="page-description">From market prices to a clearer battery dispatch strategy.</p>
+      </div>
+      <div class="market-context">
+        <span class="market-context-label">Indian Energy Exchange</span>
+        <span>Market timestamps in IST <span aria-hidden="true">&middot;</span> Asia/Kolkata</span>
+      </div>
+    </div>
+
+    <!-- Left Interactive Control Sidebar -->
+    <aside id="configuration-panel" class="sidebar" aria-label="Simulation configuration">
+
+      <!-- SCREEN 1: Grid BESS Control Panel -->
+      <div id="panel-grid-bess" class="panel-card">
+        <div class="panel-heading">
+          <p class="eyebrow">Configuration</p>
+          <h2 class="panel-title"><svg class="icon " aria-hidden="true"><use href="#icon-settings"></use></svg>Grid BESS</h2>
+          <p class="panel-description">Optimize a single day of energy trading.</p>
+        </div>
+        <h3 class="form-section-title">Market data</h3>
+
+        <!-- Dataset Selection -->
+        <div class="form-group">
+          <label class="form-label" for="grid-dataset">Hourly Dataset (IST)</label>
+          <select id="grid-dataset" class="form-select"></select>
+        </div>
+
+        <!-- Date Selection -->
+        <div class="form-group">
+          <label class="form-label" for="grid-date">Delivery Date (24 Hours)</label>
+          <input type="date" id="grid-date" class="form-input">
+        </div>
+
+        <h3 class="form-section-title section-divider">Battery parameters</h3>
+        <!-- Energy Capacity (MWh) Slider & Input -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>Energy Capacity</span>
+            <span class="val-badge" id="grid-capacity-badge">2.0 MWh</span>
+          </div>
+          <div class="slider-group">
+            <input type="range" id="grid-capacity-slider" aria-label="Grid energy capacity in MWh" class="slider-input" min="0.5" max="50" step="0.5" value="2.0">
+            <input type="number" id="grid-capacity-num" aria-label="Grid energy capacity in MWh" class="num-input-small" min="0.1" max="100" step="0.1" value="2.0">
+          </div>
+        </div>
+
+        <!-- Max Power (MW) Slider & Input -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>Max Power Limit</span>
+            <span class="val-badge" id="grid-power-badge">1.0 MW</span>
+          </div>
+          <div class="slider-group">
+            <input type="range" id="grid-power-slider" aria-label="Grid maximum power in MW" class="slider-input" min="0.1" max="25" step="0.1" value="1.0">
+            <input type="number" id="grid-power-num" aria-label="Grid maximum power in MW" class="num-input-small" min="0.1" max="50" step="0.1" value="1.0">
+          </div>
+        </div>
+
+        <!-- Round-Trip Efficiency Slider & Input -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>Round-Trip Efficiency</span>
+            <span class="val-badge" id="grid-eff-badge">92%</span>
+          </div>
+          <div class="slider-group">
+            <input type="range" id="grid-eff-slider" aria-label="Grid round-trip efficiency" class="slider-input" min="0.50" max="1.00" step="0.01" value="0.92">
+            <input type="number" id="grid-eff-num" aria-label="Grid round-trip efficiency" class="num-input-small" min="0.10" max="1.00" step="0.01" value="0.92">
+          </div>
+        </div>
+
+        <!-- Primary Run Button -->
+        <button id="btn-run-grid" class="btn-primary">
+          <span id="grid-spinner" class="spinner" style="display: none;"></span>
+          <span>Optimize Arbitrage</span><svg class="icon button-arrow" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+        </button>
+      </div>
+
+      <!-- SCREEN 2: Solarnex BESS Control Panel (Initially Hidden) -->
+      <div id="panel-solarnex" class="panel-card" style="display: none;">
+        <div class="panel-heading">
+          <p class="eyebrow">Configuration</p>
+          <h2 class="panel-title"><svg class="icon " aria-hidden="true"><use href="#icon-settings"></use></svg>Solarnex BESS</h2>
+          <p class="panel-description">Simulate dispatch across a rolling horizon.</p>
+        </div>
+        <h3 class="form-section-title">Market data</h3>
+
+        <!-- Dataset Selection -->
+        <div class="form-group">
+          <label class="form-label" for="sn-dataset">Hourly Dataset (IST)</label>
+          <select id="sn-dataset" class="form-select"></select>
+        </div>
+
+        <!-- Date Range Filter Mode -->
+        <div class="form-group">
+          <span id="sn-time-label" class="form-label">Simulation Time Horizon</span>
+          <div class="date-mode-options" role="group" aria-labelledby="sn-time-label">
+            <label><input type="radio" name="sn-date-mode" value="full" checked> Full Month</label>
+            <label><input type="radio" name="sn-date-mode" value="single"> Single Day</label>
+            <label><input type="radio" name="sn-date-mode" value="range"> Date Range</label>
+          </div>
+        </div>
+
+        <!-- Single Date Picker -->
+        <div id="sn-single-date-box" class="form-group" style="display: none;">
+          <label class="form-label" for="sn-single-date">Selected IST Day</label>
+          <input type="date" id="sn-single-date" class="form-input">
+        </div>
+
+        <!-- Date Range Pickers -->
+        <div id="sn-range-date-box" class="form-group" style="display: none;">
+          <div class="form-row">
+            <div>
+              <label class="form-label" for="sn-start-date">Start Date</label>
+              <input type="date" id="sn-start-date" class="form-input">
+            </div>
+            <div>
+              <label class="form-label" for="sn-end-date">End Date</label>
+              <input type="date" id="sn-end-date" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <h3 class="form-section-title section-divider">Battery parameters</h3>
+        <!-- Solarnex Capacity MWh -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>Energy Capacity</span>
+            <span class="val-badge" id="sn-capacity-badge">10.0 MWh</span>
+          </div>
+          <div class="slider-group">
+            <input type="range" id="sn-capacity-slider" aria-label="Solarnex energy capacity in MWh" class="slider-input" min="1" max="100" step="1" value="10.0">
+            <input type="number" id="sn-capacity-num" aria-label="Solarnex energy capacity in MWh" class="num-input-small" min="0.5" max="200" step="0.5" value="10.0">
+          </div>
+        </div>
+
+        <!-- Solarnex Max Power MW -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>Max Power Limit</span>
+            <span class="val-badge" id="sn-power-badge">2.5 MW</span>
+          </div>
+          <div class="slider-group">
+            <input type="range" id="sn-power-slider" aria-label="Solarnex maximum power in MW" class="slider-input" min="0.5" max="50" step="0.5" value="2.5">
+            <input type="number" id="sn-power-num" aria-label="Solarnex maximum power in MW" class="num-input-small" min="0.1" max="100" step="0.5" value="2.5">
+          </div>
+        </div>
+
+        <!-- Solarnex RTE -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>Round-Trip Efficiency (RTE)</span>
+            <span class="val-badge" id="sn-rte-badge">90%</span>
+          </div>
+          <div class="slider-group">
+            <input type="range" id="sn-rte-slider" aria-label="Solarnex round-trip efficiency" class="slider-input" min="0.50" max="1.00" step="0.01" value="0.90">
+            <input type="number" id="sn-rte-num" aria-label="Solarnex round-trip efficiency" class="num-input-small" min="0.10" max="1.00" step="0.01" value="0.90">
+          </div>
+        </div>
+
+        <h3 class="form-section-title section-divider">Dispatch strategy</h3>
+        <!-- Rolling Horizon Windows -->
+        <div class="form-group form-row">
+          <div>
+            <label class="form-label" for="sn-horizon-hours">Horizon (hrs)</label>
+            <input type="number" id="sn-horizon-hours" class="form-input" min="6" max="168" value="48">
+          </div>
+          <div>
+            <label class="form-label" for="sn-step-hours">Step (hrs)</label>
+            <input type="number" id="sn-step-hours" class="form-input" min="1" max="48" value="24">
+          </div>
+        </div>
+
+        <!-- Spike Filter Toggle -->
+        <div class="toggle-group">
+          <span id="sn-spike-label" class="toggle-label">Price Spike Filter</span>
+          <label class="switch">
+            <input type="checkbox" id="sn-spike-filter" aria-labelledby="sn-spike-label" checked>
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <h3 class="form-section-title section-divider">Output options</h3>
+        <!-- Animate Dispatch Toggle -->
+        <div class="toggle-group">
+          <span id="sn-animate-label" class="toggle-label">Generate Animated GIF</span>
+          <label class="switch">
+            <input type="checkbox" id="sn-animate" aria-labelledby="sn-animate-label">
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <div id="sn-anim-hours-box" class="form-group" style="display: none;">
+          <label class="form-label" for="sn-anim-hours">Animation Hours (e.g. 168 = 1 week)</label>
+          <input type="number" id="sn-anim-hours" class="form-input" min="24" max="720" value="168">
+        </div>
+
+        <!-- Primary Run Button -->
+        <button id="btn-run-solarnex" class="btn-primary">
+          <span id="sn-spinner" class="spinner" style="display: none;"></span>
+          <span>Run Rolling Simulation</span><svg class="icon button-arrow" aria-hidden="true"><use href="#icon-arrow"></use></svg>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Right Workspace & Visualization Center -->
+    <section class="workspace" aria-label="Simulation results">
+      <div class="section-heading"><h2>Performance overview</h2><span>Battery economics &amp; operation</span></div>
+
+      <!-- Dynamic Top KPI Ribbon -->
+      <div id="kpi-container" class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">System State</div>
+          <div class="kpi-value">Ready</div>
+          <div class="kpi-subtext">Select parameters and click Optimize</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Storage Model</div>
+          <div class="kpi-value">PuLP CBC</div>
+          <div class="kpi-subtext">Mixed-Integer Linear Program</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Market Timezone</div>
+          <div class="kpi-value">Asia/Kolkata</div>
+          <div class="kpi-subtext">Indian Energy Exchange (IEX)</div>
+        </div>
+      </div>
+
+      <!-- Main Visualizations Box -->
+      <div class="content-box">
+        <div class="content-header">
+          <div class="content-heading">
+            <h2 id="view-title" class="content-title">Dispatch &amp; market analysis</h2>
+            <p class="content-description">Generated figures and the hourly data behind them.</p>
+          </div>
+
+          <!-- View Sub-tabs -->
+          <div class="view-tabs">
+            <button class="view-btn active" data-view="static_plots" aria-pressed="true">Dispatch Figures</button>
+            <button class="view-btn" data-view="table" aria-pressed="false">Hourly Data Table</button>
+          </div>
+        </div>
+
+        <!-- Generated dispatch image and data viewport -->
+        <div id="chart-viewport" class="chart-viewport">
+          <div class="empty-state">
+            <div class="empty-icon"><svg class="icon " aria-hidden="true"><use href="#icon-battery"></use></svg></div>
+            <p class="eyebrow">Ready when you are</p>
+            <h3>A clearer view of your battery's potential.</h3>
+            <p>Select your market data and battery parameters, then run an optimization or simulation to explore dispatch, prices and returns.</p>
+            <ol class="empty-steps">
+              <li><span>01</span> Select market data</li>
+              <li><span>02</span> Set battery limits</li>
+              <li><span>03</span> Run your analysis</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Compact layouts reuse the original controls inside a native modal drawer. -->
+  <dialog id="configuration-drawer" class="configuration-drawer" aria-labelledby="configuration-drawer-title">
+    <div class="drawer-header">
+      <h2 id="configuration-drawer-title">Simulation configuration</h2>
+      <button id="configuration-close" class="drawer-close" type="button" aria-label="Close configuration">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div id="configuration-drawer-body" class="drawer-body"></div>
+  </dialog>
+
+  <!-- Interactive Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- JavaScript Controller -->
+  <script src="/static/js/app.js?v=20261031-responsive1"></script>
+  <script src="/static/js/responsive.js?v=20261031-responsive1"></script>
+</body>
+</html>
+
