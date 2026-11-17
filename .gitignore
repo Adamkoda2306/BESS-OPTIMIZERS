@@ -222,3 +222,4 @@ __marimo__/
 
 output/
 WEB/tmp/
+forecasting_model/saved_models/best_forecasting_ann.pth
