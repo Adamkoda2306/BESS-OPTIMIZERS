@@ -11,8 +11,19 @@ from datetime import date
 import json
 import os
 from pathlib import Path
+import sys
 
 import pandas as pd
+
+# Keep imports stable when this runner is launched from the forecasting folder.
+PROJECT_DIR = next(
+    (parent for parent in Path(__file__).resolve().parents
+     if (parent / "solarnex_bess_engine").is_dir()
+     and (parent / "forecasting_model").is_dir()),
+    Path(__file__).resolve().parents[1],
+)
+if str(PROJECT_DIR) not in sys.path:
+    sys.path.insert(0, str(PROJECT_DIR))
 
 from forecasting.solarnex_bess import config
 from forecasting.solarnex_bess.model import build_simulation_input, run_solarnex_simulation
