@@ -1,0 +1,14 @@
+{
+  "accuracy_wapa_pct": 87.38,
+  "accuracy_mape_pct": 87.9,
+  "accuracy_nrmse_pct": 77.98,
+  "r2_score_pct": 82.15,
+  "tolerance_within_10pct": 62.26,
+  "tolerance_within_15pct": 77.57,
+  "tolerance_within_20pct": 83.87,
+  "directional_accuracy_pct": 74.52,
+  "mae": 632.34,
+  "rmse": 1103.45,
+  "mape": 12.1,
+  "wape": 12.62
+}

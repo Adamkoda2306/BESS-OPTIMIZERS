@@ -354,7 +354,12 @@ def download_records(start, end):
             if Path(ca_file).is_file():
                 context.load_verify_locations(cafile=ca_file)
                 break
-    request = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+    }
+    request = Request(url, headers=headers)
     try:
         with urlopen(request, timeout=config.REQUEST_TIMEOUT_SECONDS, context=context) as response:
             html = response.read().decode('utf-8')

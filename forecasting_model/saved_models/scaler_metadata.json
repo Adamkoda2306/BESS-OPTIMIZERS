@@ -1,0 +1,16 @@
+{
+  "price_column": "price_inr_mwh",
+  "past_days": 7,
+  "input_hours": 168,
+  "forecast_hours": 24,
+  "use_feature_engineering": true,
+  "global_stats": {
+    "price_min": 998.54,
+    "price_max": 20000.0,
+    "price_mean": 5526.370374608763,
+    "price_std": 3248.907546679649,
+    "total_hours": 20448,
+    "start_time": "2021-09-01 00:00:00+05:30",
+    "end_time": "2023-12-31 23:00:00+05:30"
+  }
+}
